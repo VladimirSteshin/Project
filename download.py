@@ -50,8 +50,7 @@ class VKDownload:
                     largest_type = size['type']
                     url = size['url']
             if name in d_dict.keys():
-                d_dict[date] = [url, largest_type]
+                d_dict[str(name) + ' ' + str(date)] = [url, largest_type]
             else:
                 d_dict[name] = [url, largest_type]
         return d_dict
-

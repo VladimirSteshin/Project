@@ -9,3 +9,5 @@ if __name__ == '__main__':
     json_list = download.get_photo_list()
     path = download.create_folder()
     download_dict = download.download_dict(json_list)
+    for key, value in download_dict.items():
+        print(key, value[0])
