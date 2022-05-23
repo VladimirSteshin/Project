@@ -1,5 +1,5 @@
 import requests
-from pprint import pprint
+import os
 
 
 class VKDownload:
@@ -26,4 +26,32 @@ class VKDownload:
         url = f'{self.host}photos.get'
         params = self.get_params()
         request = requests.get(url, params=params).json()
-        pprint(request)
+        return request
+
+    def create_folder(self):
+        if not os.path.isdir('photos'):
+            os.mkdir('photos')
+        os.chdir('photos')
+        path = os.getcwd()
+        return path
+
+    def download_dict(self, json):
+        d_dict = {}
+        for item in json['response']['items']:
+            name = item['likes']['count']
+            date = item['date']
+            largest_type = ''
+            url = ''
+            pixels = 0
+            for size in item['sizes']:
+                multiply = int(size['height']) * int(size['width'])
+                if multiply > pixels:
+                    pixels = multiply
+                    largest_type = size['type']
+                    url = size['url']
+            if name in d_dict.keys():
+                d_dict[date] = [url, largest_type]
+            else:
+                d_dict[name] = [url, largest_type]
+        return d_dict
+
