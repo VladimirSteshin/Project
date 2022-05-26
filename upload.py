@@ -1,18 +1,19 @@
 import requests
 import os
+from tqdm import tqdm
 
 
 class YAUpload:
     def __init__(self, token: str, version):
-        self.photo_path = None
-        self.photos = None
-        self.params = None
         self.path = os.getcwd()
-        self.headers = None
-        self.folder_link = None
         self.host = f'https://cloud-api.yandex.net:443/'
         self.token = token
         self.version = version
+        self.headers = None
+        self.folder_link = None
+        self.photo_path = None
+        self.photos = None
+        self.params = None
 
     def path_and_files_in(self):
         os.chdir('photos')
@@ -37,21 +38,17 @@ class YAUpload:
         url = f'{self.host}{self.version}/disk/resources'
         search = requests.get(url, headers=self.headers, params=self.params)
         if search.status_code == 404:
-            response = requests.put(url, headers=self.headers, params=self.params)
-            # get_link = response.json()
-            # self.folder_link = get_link['href']
-            # with open(self.path + '\\' + 'upl_link.txt', 'w') as file:
-            #     file.write(get_link['href'])
+            requests.put(url, headers=self.headers, params=self.params)
+
         else:
             pass
-        # with open(self.path + '\\' + 'upl_link.txt') as link:
-        #     self.folder_link = link.readline()
 
     def ya_upload(self):
-        for name in self.photos:
+        for name in tqdm(self.photos):
             with open(self.photo_path + '\\' + name, 'rb') as file:
                 url = f'{self.host}{self.version}/disk/resources/upload'
-                link = requests.get(url, headers=self.headers, params={'path': f'Photo/{name}', 'overwrite': True})
+                link = requests.get(url, headers=self.headers,
+                                    params={'path': f'{self.params["path"]}/{name}', 'overwrite': True})
                 upload = (link.json())['href']
-                response = requests.put(upload, params={'path': f'Photo/{name}'})
-                print(response.status_code)
+                requests.put(upload, files={'file': file})
+        print(f'Photos uploaded to folder {self.params["path"]} on YaDisk ')

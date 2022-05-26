@@ -12,7 +12,7 @@ if __name__ == "__main__":
     download = VKDownload(vk_token, vk_version, vk_id)
     download.get_photo_list()
     download.create_folder()
-    download.get_download_dict()
+    download.get_download_tools()
     download.download_and_log()
     upload = YAUpload(ya_token, ya_version)
     upload.path_and_files_in()
@@ -20,4 +20,3 @@ if __name__ == "__main__":
     upload.get_params()
     upload.ya_folder()
     upload.ya_upload()
-
