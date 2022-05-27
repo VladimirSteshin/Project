@@ -6,9 +6,9 @@ from tqdm import tqdm
 class YAUpload:
     def __init__(self, token: str, version):
         self.path = os.getcwd()
-        self.host = f'https://cloud-api.yandex.net:443/'
-        self.token = token
         self.version = version
+        self.host = f'https://cloud-api.yandex.net:443/{self.version}/disk/resources'
+        self.token = token
         self.headers = None
         self.folder_link = None
         self.photo_path = None
@@ -35,7 +35,7 @@ class YAUpload:
         }
 
     def ya_folder(self):
-        url = f'{self.host}{self.version}/disk/resources'
+        url = self.host
         search = requests.get(url, headers=self.headers, params=self.params)
         if search.status_code == 404:
             requests.put(url, headers=self.headers, params=self.params)
@@ -46,7 +46,7 @@ class YAUpload:
     def ya_upload(self):
         for name in tqdm(self.photos):
             with open(self.photo_path + '\\' + name, 'rb') as file:
-                url = f'{self.host}{self.version}/disk/resources/upload'
+                url = f'{self.host}/upload'
                 link = requests.get(url, headers=self.headers,
                                     params={'path': f'{self.params["path"]}/{name}', 'overwrite': True})
                 upload = (link.json())['href']

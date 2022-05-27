@@ -9,6 +9,7 @@ class VKDownload:
 
     def __init__(self, token, version, vk_id):
         self.token = token
+        self.version = version
         self.host = "https://api.vk.com/method/"
         self.version = version
         self.id = vk_id
